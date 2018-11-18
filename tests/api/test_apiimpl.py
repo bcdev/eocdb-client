@@ -227,11 +227,12 @@ class ConfigApiTest(ApiTest):
 
 
 class ApiImplTest(ApiTest):
-    def test_constr(self):
+    def test_constr_default(self):
         api = ApiImpl()
         self.assertIsNotNone(api.config)
-        self.assertIsNotNone(api.server_url)
+        self.assertIsNone(api.server_url)
 
+    def test_constr_with_parameter(self):
         api = ApiImpl(server_url="https://bibosrv", config_store=MemConfigStore(server_url="https://bertsrv"))
         self.assertIsNotNone(api.config)
         self.assertEqual("https://bibosrv", api.server_url)

@@ -76,7 +76,9 @@ class ApiImpl(Api):
             dataset_json = fp.read()
         request = self._make_request('/datasets', method="PUT", data=dataset_json.encode("utf-8"))
         with urllib.request.urlopen(request) as response:
-            return response.read()
+            result =  response.read()
+            response.close()
+            return result
 
     def update_dataset(self, dataset_file: str):
         with open(dataset_file) as fp:
