@@ -17,9 +17,12 @@ class MultiPartFormTest(unittest.TestCase):
                       file_obj)
 
         file_obj = open(ClientTest.get_input_path("chl", "chl-s170710w.sub"))
-        form.add_file("datasetFiles",
-                      "chl/chl-s170710w.sub",
-                      file_obj)
+        try:
+            form.add_file("datasetFiles",
+                          "chl/chl-s170710w.sub",
+                          file_obj)
+        finally:
+            file_obj.close()
 
         binary_form = bytes(form)
         self.assertEqual(4856, len(binary_form))
