@@ -1,10 +1,11 @@
 import json
+import os
 import urllib.request
 from abc import ABCMeta
 
 import httpretty
 
-from eocdb_client.api.apiimpl import ApiImpl
+from eocdb_client.api.apiimpl import ApiImpl, DEFAULT_CONFIG_FILE
 from eocdb_client.configstore import MemConfigStore
 from tests.helpers import ClientTest
 
@@ -228,9 +229,17 @@ class ConfigApiTest(ApiTest):
 
 class ApiImplTest(ApiTest):
     def test_constr_default(self):
-        api = ApiImpl()
-        self.assertIsNotNone(api.config)
-        self.assertIsNone(api.server_url)
+        renamed_file_name = DEFAULT_CONFIG_FILE + "_BAK"
+        if os.path.isfile(DEFAULT_CONFIG_FILE):
+            os.rename(DEFAULT_CONFIG_FILE, renamed_file_name)
+
+        try:
+            api = ApiImpl()
+            self.assertIsNotNone(api.config)
+            self.assertIsNone(api.server_url)
+        finally:
+            if os.path.isfile(DEFAULT_CONFIG_FILE):
+                os.rename(renamed_file_name, DEFAULT_CONFIG_FILE)
 
     def test_constr_with_parameter(self):
         api = ApiImpl(server_url="https://bibosrv", config_store=MemConfigStore(server_url="https://bertsrv"))
